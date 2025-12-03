@@ -24,7 +24,6 @@ namespace AMD_DWORD_Viewer
             lblKeyName.Text = isNewValue ? $"Add new value: {keyName}" : $"Edit value: {keyName}";
             Value = currentValue;
             
-            // Set initial values
             txtDecimal.Text = currentValue.ToString();
             txtHex.Text = "0x" + currentValue.ToString("X8");
         }
@@ -41,7 +40,6 @@ namespace AMD_DWORD_Viewer
             
             this.SuspendLayout();
             
-            // Form
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
             this.BackColor = Color.FromArgb(30, 30, 30);
@@ -53,40 +51,34 @@ namespace AMD_DWORD_Viewer
             this.Text = "Edit DWORD Value";
             this.Font = new Font("Segoe UI", 9F);
             
-            // lblKeyName
             this.lblKeyName.AutoSize = true;
             this.lblKeyName.ForeColor = Color.White;
             this.lblKeyName.Location = new Point(20, 20);
             this.lblKeyName.Size = new Size(360, 20);
             this.lblKeyName.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             
-            // lblDecimal
             this.lblDecimal.AutoSize = true;
             this.lblDecimal.ForeColor = Color.White;
             this.lblDecimal.Location = new Point(20, 60);
             this.lblDecimal.Text = "Decimal:";
             
-            // txtDecimal
             this.txtDecimal.BackColor = Color.FromArgb(50, 50, 50);
             this.txtDecimal.ForeColor = Color.White;
             this.txtDecimal.Location = new Point(120, 57);
             this.txtDecimal.Size = new Size(250, 23);
             this.txtDecimal.TextChanged += TxtDecimal_TextChanged;
             
-            // lblHex
             this.lblHex.AutoSize = true;
             this.lblHex.ForeColor = Color.White;
             this.lblHex.Location = new Point(20, 95);
             this.lblHex.Text = "Hexadecimal:";
             
-            // txtHex
             this.txtHex.BackColor = Color.FromArgb(50, 50, 50);
             this.txtHex.ForeColor = Color.White;
             this.txtHex.Location = new Point(120, 92);
             this.txtHex.Size = new Size(250, 23);
             this.txtHex.TextChanged += TxtHex_TextChanged;
             
-            // btnOk
             this.btnOk.BackColor = Color.FromArgb(60, 60, 60);
             this.btnOk.FlatStyle = FlatStyle.Flat;
             this.btnOk.ForeColor = Color.White;
@@ -95,7 +87,6 @@ namespace AMD_DWORD_Viewer
             this.btnOk.Text = "OK";
             this.btnOk.Click += BtnOk_Click;
             
-            // btnCancel
             this.btnCancel.BackColor = Color.FromArgb(60, 60, 60);
             this.btnCancel.FlatStyle = FlatStyle.Flat;
             this.btnCancel.ForeColor = Color.White;
@@ -104,7 +95,6 @@ namespace AMD_DWORD_Viewer
             this.btnCancel.Text = "Cancel";
             this.btnCancel.DialogResult = DialogResult.Cancel;
             
-            // Add controls
             this.Controls.Add(this.lblKeyName);
             this.Controls.Add(this.lblDecimal);
             this.Controls.Add(this.txtDecimal);
@@ -174,7 +164,6 @@ namespace AMD_DWORD_Viewer
 
         private void BtnOk_Click(object? sender, EventArgs e)
         {
-            // Validate both fields
             if (!uint.TryParse(txtDecimal.Text, out uint decValue))
             {
                 MessageBox.Show("Invalid decimal value. Must be between 0 and 4,294,967,295.", 
