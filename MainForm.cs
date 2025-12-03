@@ -723,22 +723,5 @@ namespace AMD_DWORD_Viewer
 
                 // Initialize manager and panel
                 tweakManager = new TweakManager(registryWriter, registryReader);
-                tweakManager.LoadState(tweaks);
-
-                tweaksPanel = new TweaksPanel(tweakManager, allEntries, RefreshListView);
-                tweaksPanel.LoadTweaks(tweaks);
-                
-                this.Controls.Add(tweaksPanel);
-                
-                // Adjust main list view to make room for tweaks panel
-                listViewDwords.Width = this.ClientSize.Width - tweaksPanel.Width;
-                
-                lblStatus.Text += $" | {tweaks.Count} tweaks loaded.";
-            }
-            catch (Exception ex)
-            {
-                lblStatus.Text += $" | Error loading tweaks: {ex.Message}";
-            }
-        }
     }
 }
