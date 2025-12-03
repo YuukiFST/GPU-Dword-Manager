@@ -1,33 +1,12 @@
 namespace AMD_DWORD_Viewer.Models
 {
-    /// <summary>
-    /// Represents a single AMD GPU DWORD registry entry
-    /// </summary>
     public class DwordEntry
     {
-        /// <summary>
-        /// Full registry path (e.g., "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{...}\0000")
-        /// </summary>
         public string RegistryPath { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Registry key/value name (e.g., "KMD_Oca_ErrorInjection")
-        /// </summary>
         public string KeyName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Whether the DWORD exists in the system registry
-        /// </summary>
         public bool Exists { get; set; }
-
-        /// <summary>
-        /// The DWORD value if it exists (null if not found)
-        /// </summary>
         public object? Value { get; set; }
 
-        /// <summary>
-        /// Formatted display value combining hex and decimal
-        /// </summary>
         public string DisplayValue
         {
             get
@@ -46,9 +25,6 @@ namespace AMD_DWORD_Viewer.Models
             }
         }
 
-        /// <summary>
-        /// Hexadecimal representation of the value
-        /// </summary>
         public string HexValue
         {
             get
@@ -67,9 +43,6 @@ namespace AMD_DWORD_Viewer.Models
             }
         }
 
-        /// <summary>
-        /// Decimal representation of the value
-        /// </summary>
         public string DecimalValue
         {
             get
@@ -81,14 +54,7 @@ namespace AMD_DWORD_Viewer.Models
             }
         }
 
-        /// <summary>
-        /// Status text (Present/Missing)
-        /// </summary>
         public string Status => Exists ? "Present" : "Missing";
-
-        /// <summary>
-        /// Original line from the AMD EXPORT.txt file
-        /// </summary>
         public string OriginalLine { get; set; } = string.Empty;
     }
 }

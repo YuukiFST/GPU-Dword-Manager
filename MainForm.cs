@@ -14,7 +14,7 @@ namespace AMD_DWORD_Viewer
 {
     public partial class MainForm : Form
     {
-        // Windows API for dark title bar
+
         [DllImport("dwmapi.dll")]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
@@ -30,14 +30,14 @@ namespace AMD_DWORD_Viewer
         private TweaksPanel? tweaksPanel;
         private List<TweakDefinition> tweaks = new List<TweakDefinition>();
         private bool isSearchPlaceholder = true;
-        private bool showRegistryPath = true; // Changed to true since it's visible by default now
-        private bool sortAscending = true; // Track sort direction for Key Name column
+        private bool showRegistryPath = true; 
+        private bool sortAscending = true; 
 
         public MainForm()
         {
             InitializeComponent();
             
-            // Load the icon
+
             try
             {
                 string iconPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "amd.ico");
@@ -48,7 +48,6 @@ namespace AMD_DWORD_Viewer
             }
             catch
             {
-                // Icon loading failed, use default
             }
         }
 
@@ -64,31 +63,21 @@ namespace AMD_DWORD_Viewer
         }
 
         private async void MainForm_Load(object sender, EventArgs e)
-
         {
             try
             {
-                // Show loading state
-                lblStatus.Text = "Loading DWORDS from file...";
+                lblStatus.Text = "Loading DWORDS...";
                 progressBar.Visible = true;
                 progressBar.Style = ProgressBarStyle.Marquee;
 
-                // Get path to AMD EXPORT.txt
-                var exePath = AppDomain.CurrentDomain.BaseDirectory;
-                var amdExportPath = Path.Combine(exePath, "AMD EXPORT.txt");
-
-                // Parse the file
-                await Task.Run(() =>
-                {
-                    allEntries = parser.ParseFile(amdExportPath);
-                });
+                allEntries = await Task.Run(() => parser.ParseFile());
 
                 lblStatus.Text = $"Reading registry values for {allEntries.Count} DWORDS...";
                 progressBar.Style = ProgressBarStyle.Continuous;
                 progressBar.Maximum = allEntries.Count;
                 progressBar.Value = 0;
 
-                // Read registry values with progress
+
                 var progress = new Progress<int>(value =>
                 {
                     progressBar.Value = value;
@@ -100,21 +89,21 @@ namespace AMD_DWORD_Viewer
 
                 await registryReader.ReadRegistryValuesAsync(allEntries, progress);
 
-                // Update filtered list
+
                 filteredEntries = new List<DwordEntry>(allEntries);
 
-                // Update ListView
+
                 listViewDwords.VirtualListSize = filteredEntries.Count;
 
-                // Update status
+
                 var foundCount = allEntries.Count(e => e.Exists);
                 lblStatus.Text = $"{foundCount} of {allEntries.Count} DWORDS found in registry";
                 progressBar.Visible = false;
 
-                // Refresh the ListView
+
                 listViewDwords.Invalidate();
                 
-                // Initialize tweaks
+
                 InitializeTweaks();
             }
             catch (Exception ex)
@@ -132,7 +121,7 @@ namespace AMD_DWORD_Viewer
             {
                 var entry = filteredEntries[e.ItemIndex];
                 
-                // Column order: Key Name, Hex Value, Decimal Value, Status, Registry Path
+
                 var item = new ListViewItem(new[]
                 {
                     entry.KeyName,
@@ -142,7 +131,7 @@ namespace AMD_DWORD_Viewer
                     entry.RegistryPath
                 });
 
-                // Apply different styling for missing entries
+
                 if (!entry.Exists)
                 {
                     item.ForeColor = Color.Gray;
@@ -183,11 +172,11 @@ namespace AMD_DWORD_Viewer
 
         private void ApplyFilter()
         {
-            // Safety check: don't apply filter if data hasn't been loaded yet
+
             if (allEntries == null || allEntries.Count == 0)
                 return;
 
-            // Safety check: ensure UI is ready
+
             if (listViewDwords == null || lblStatus == null)
                 return;
 
@@ -196,10 +185,10 @@ namespace AMD_DWORD_Viewer
                 var searchText = isSearchPlaceholder ? "" : txtSearch?.Text?.Trim() ?? "";
                 var presenceFilter = cboFilter?.SelectedIndex ?? 0;
 
-                // Start with all entries
+
                 var entries = allEntries.AsEnumerable();
 
-                // Apply presence filter
+
                 if (presenceFilter == 1) // Present Only
                 {
                     entries = entries.Where(e => e.Exists);
@@ -209,7 +198,7 @@ namespace AMD_DWORD_Viewer
                     entries = entries.Where(e => !e.Exists);
                 }
 
-                // Apply search filter
+
                 if (!string.IsNullOrEmpty(searchText))
                 {
                     entries = entries.Where(e =>
@@ -220,12 +209,12 @@ namespace AMD_DWORD_Viewer
 
                 filteredEntries = entries.ToList();
 
-                // Update ListView
+
                 listViewDwords.BeginUpdate();
                 listViewDwords.VirtualListSize = filteredEntries.Count;
                 listViewDwords.EndUpdate();
 
-                // Update status
+
                 var foundCount = filteredEntries.Count(e => e.Exists);
                 var filterText = presenceFilter == 0 ? "" : presenceFilter == 1 ? " (showing present only)" : " (showing missing only)";
                 lblStatus.Text = $"{foundCount} of {filteredEntries.Count} DWORDS found in registry{filterText}" +
@@ -239,7 +228,7 @@ namespace AMD_DWORD_Viewer
 
         private void cboFilter_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            // Only apply filter if data is loaded
+
             if (allEntries != null && allEntries.Count > 0)
             {
                 ApplyFilter();
@@ -250,7 +239,7 @@ namespace AMD_DWORD_Viewer
         {
             showRegistryPath = !showRegistryPath;
             
-            // Toggle the Registry Path column width (now column index 4)
+
             if (showRegistryPath)
             {
                 listViewDwords.Columns[4].Width = 500;
@@ -265,13 +254,13 @@ namespace AMD_DWORD_Viewer
 
         private void listViewDwords_ColumnClick(object? sender, ColumnClickEventArgs e)
         {
-            // Only sort when Key Name column (index 0) is clicked
+
             if (e.Column == 0)
             {
-                // Toggle sort direction
+
                 sortAscending = !sortAscending;
                 
-                // Sort the filtered entries
+
                 if (sortAscending)
                 {
                     filteredEntries = filteredEntries.OrderBy(entry => entry.KeyName).ToList();
@@ -281,7 +270,7 @@ namespace AMD_DWORD_Viewer
                     filteredEntries = filteredEntries.OrderByDescending(entry => entry.KeyName).ToList();
                 }
                 
-                // Refresh the ListView
+
                 listViewDwords.BeginUpdate();
                 listViewDwords.VirtualListSize = filteredEntries.Count;
                 listViewDwords.EndUpdate();
@@ -297,13 +286,13 @@ namespace AMD_DWORD_Viewer
                 {
                     var entry = filteredEntries[index];
                     
-                    // Copy value to clipboard
+
                     if (entry.Exists && entry.Value != null)
                     {
                         var copyText = $"{entry.KeyName} = {entry.DisplayValue}";
                         Clipboard.SetText(copyText);
                         
-                        // Flash the status to show it was copied
+
                         var originalText = lblStatus.Text;
                         lblStatus.ForeColor = ColorTranslator.FromHtml("#FF8C00");
                         lblStatus.Text = $"Copied: {copyText}";
@@ -325,7 +314,7 @@ namespace AMD_DWORD_Viewer
 
         private void contextMenu_Opening(object? sender, System.ComponentModel.CancelEventArgs e)
         {
-            // Only show context menu if an item is selected
+
             if (listViewDwords.SelectedIndices.Count == 0)
             {
                 e.Cancel = true;
@@ -341,7 +330,7 @@ namespace AMD_DWORD_Viewer
 
             var entry = filteredEntries[index];
 
-            // Show/hide menu items based on whether the value exists
+
             menuItemEdit.Visible = entry.Exists;
             menuItemDelete.Visible = entry.Exists;
             menuItemAdd.Visible = !entry.Exists;
@@ -365,7 +354,7 @@ namespace AMD_DWORD_Viewer
                 return;
             }
 
-            // Get current value as uint - this is the OLD value before editing
+
             uint currentValue = entry.Value != null ? Convert.ToUInt32(entry.Value) : 0;
 
             using (var dialog = new EditValueDialog(entry.KeyName, currentValue, false))
@@ -374,10 +363,10 @@ namespace AMD_DWORD_Viewer
                 {
                     try
                     {
-                        // Write the new value
+
                         if (registryWriter.WriteDwordValue(entry, dialog.Value))
                         {
-                            // Track the change - IMPORTANT: OldValue is what was in registry before this edit
+
                             var change = new Models.ChangeEntry
                             {
                                 Timestamp = DateTime.Now,
@@ -390,11 +379,11 @@ namespace AMD_DWORD_Viewer
                             changeHistory.Add(change);
                             UpdateUndoButton();
 
-                            // Update the entry
+
                             entry.Value = dialog.Value;
                             entry.Exists = true;
 
-                            // Refresh the ListView
+
                             listViewDwords.Invalidate();
 
                             MessageBox.Show(
@@ -441,7 +430,7 @@ namespace AMD_DWORD_Viewer
                 return;
             }
 
-            // Confirm deletion
+
             var result = MessageBox.Show(
                 $"Are you sure you want to delete this DWORD value?\n\n" +
                 $"Key: {entry.KeyName}\n" +
@@ -457,8 +446,8 @@ namespace AMD_DWORD_Viewer
                 {
                     if (registryWriter.DeleteDwordValue(entry))
                     {
-                        // Track the change - IMPORTANT: OldValue is what was in registry before deletion
-                        // This allows us to restore it when reverting
+
+
                         uint? oldValue = entry.Value != null ? Convert.ToUInt32(entry.Value) : null;
                         var change = new Models.ChangeEntry
                         {
@@ -472,11 +461,11 @@ namespace AMD_DWORD_Viewer
                         changeHistory.Add(change);
                         UpdateUndoButton();
 
-                        // Update the entry
+
                         entry.Value = null;
                         entry.Exists = false;
 
-                        // Refresh the ListView
+
                         listViewDwords.Invalidate();
 
                         MessageBox.Show($"Successfully deleted {entry.KeyName}",
@@ -525,10 +514,10 @@ namespace AMD_DWORD_Viewer
                 {
                     try
                     {
-                        // Write the new value
+
                         if (registryWriter.WriteDwordValue(entry, dialog.Value))
                         {
-                            // Track the change
+
                             var change = new Models.ChangeEntry
                             {
                                 Timestamp = DateTime.Now,
@@ -541,11 +530,11 @@ namespace AMD_DWORD_Viewer
                             changeHistory.Add(change);
                             UpdateUndoButton();
 
-                            // Update the entry
+
                             entry.Value = dialog.Value;
                             entry.Exists = true;
 
-                            // Refresh the ListView
+
                             listViewDwords.Invalidate();
 
                             MessageBox.Show($"Successfully added {entry.KeyName} with value {dialog.Value}",
@@ -584,10 +573,10 @@ namespace AMD_DWORD_Viewer
             if (changeHistory.Count == 0)
                 return;
 
-            // Get the last change
+
             var lastChange = changeHistory[changeHistory.Count - 1];
 
-            // Confirm undo
+
             var message = lastChange.Type switch
             {
                 Models.ChangeType.Add => $"Undo adding this value?\n\nThis will DELETE the value from the registry:\n\n{lastChange.KeyName}\nValue: {lastChange.NewValueDisplay}",
@@ -604,7 +593,7 @@ namespace AMD_DWORD_Viewer
 
             try
             {
-                // Find the entry in allEntries
+
                 var entry = allEntries.FirstOrDefault(e => 
                     e.KeyName == lastChange.KeyName && 
                     e.RegistryPath == lastChange.RegistryPath);
@@ -618,11 +607,11 @@ namespace AMD_DWORD_Viewer
 
                 bool success = false;
 
-                // Revert based on change type
+
                 switch (lastChange.Type)
                 {
                     case Models.ChangeType.Add:
-                        // Delete the value that was added
+
                         success = registryWriter.DeleteDwordValue(entry);
                         if (success)
                         {
@@ -632,7 +621,7 @@ namespace AMD_DWORD_Viewer
                         break;
 
                     case Models.ChangeType.Delete:
-                        // Re-add the value that was deleted
+
                         if (lastChange.OldValue.HasValue)
                         {
                             success = registryWriter.WriteDwordValue(entry, lastChange.OldValue.Value);
@@ -645,7 +634,7 @@ namespace AMD_DWORD_Viewer
                         break;
 
                     case Models.ChangeType.Edit:
-                        // Restore the old value
+
                         if (lastChange.OldValue.HasValue)
                         {
                             success = registryWriter.WriteDwordValue(entry, lastChange.OldValue.Value);
@@ -663,11 +652,11 @@ namespace AMD_DWORD_Viewer
                     MessageBox.Show("Change undone successfully!", "Success",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // Remove from history
+
                     changeHistory.Remove(lastChange);
                     UpdateUndoButton();
 
-                    // Refresh the ListView
+
                     listViewDwords.Invalidate();
                 }
                 else
@@ -693,13 +682,13 @@ namespace AMD_DWORD_Viewer
 
         private void RefreshListView()
         {
-            // Re-read registry values for all entries
+
             Task.Run(async () =>
             {
                 var progress = new Progress<int>();
                 await registryReader.ReadRegistryValuesAsync(allEntries, progress);
 
-                // Update filtered list
+
                 this.Invoke((Action)(() =>
                 {
                     ApplyFilter();
@@ -712,7 +701,6 @@ namespace AMD_DWORD_Viewer
         {
             try
             {
-                // Load hardcoded tweaks
                 tweaks = tweakParser.LoadTweaks();
                 
                 if (tweaks.Count == 0)
@@ -721,7 +709,20 @@ namespace AMD_DWORD_Viewer
                     return;
                 }
 
-                // Initialize manager and panel
                 tweakManager = new TweakManager(registryWriter, registryReader);
+                tweakManager.LoadState(tweaks);
+
+                tweaksPanel = new TweaksPanel(tweakManager, allEntries, RefreshListView);
+                tweaksPanel.LoadTweaks(tweaks);
+                
+                this.Controls.Add(tweaksPanel);
+                
+                listViewDwords.Width = this.ClientSize.Width - tweaksPanel.Width;
+            }
+            catch (Exception ex)
+            {
+                lblStatus.Text += $" | Error loading tweaks: {ex.Message}";
+            }
+        }
     }
 }

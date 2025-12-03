@@ -2,9 +2,6 @@ using System;
 
 namespace AMD_DWORD_Viewer.Models
 {
-    /// <summary>
-    /// Type of registry change
-    /// </summary>
     public enum ChangeType
     {
         Add,
@@ -12,9 +9,6 @@ namespace AMD_DWORD_Viewer.Models
         Delete
     }
 
-    /// <summary>
-    /// Represents a single registry change that can be reverted
-    /// </summary>
     public class ChangeEntry
     {
         public DateTime Timestamp { get; set; }

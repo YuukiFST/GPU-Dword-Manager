@@ -38,3 +38,5 @@ packages/
 AMD EXPORT.txt
 tweaks_state.json
 *.log
+
+*.exe

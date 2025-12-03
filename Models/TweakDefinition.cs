@@ -2,20 +2,14 @@ using System.Collections.Generic;
 
 namespace AMD_DWORD_Viewer.Models
 {
-    /// <summary>
-    /// Represents a single DWORD change within a tweak
-    /// </summary>
     public class TweakChange
     {
         public string KeyName { get; set; } = string.Empty;
         public uint TargetValue { get; set; }
-        public uint? OriginalValue { get; set; }  // null if didn't exist before
+        public uint? OriginalValue { get; set; }
         public bool ExistedBefore { get; set; }
     }
 
-    /// <summary>
-    /// Represents a complete tweak with all its DWORD changes
-    /// </summary>
     public class TweakDefinition
     {
         public string Name { get; set; } = string.Empty;

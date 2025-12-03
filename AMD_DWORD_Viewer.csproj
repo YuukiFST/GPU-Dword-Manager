@@ -9,4 +9,8 @@
     <ApplicationIcon>amd.ico</ApplicationIcon>
   </PropertyGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="AMD_EXPORT.txt" />
+  </ItemGroup>
+
 </Project>

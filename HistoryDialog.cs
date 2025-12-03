@@ -40,7 +40,7 @@ namespace AMD_DWORD_Viewer
             
             this.SuspendLayout();
             
-            // Form
+
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
             this.BackColor = Color.Black;
@@ -51,7 +51,7 @@ namespace AMD_DWORD_Viewer
             this.Text = "Change History";
             this.Font = new Font("Segoe UI", 9F);
             
-            // lblTitle
+
             this.lblTitle.AutoSize = false;
             this.lblTitle.BackColor = Color.Transparent;
             this.lblTitle.ForeColor = Color.Red;
@@ -60,7 +60,7 @@ namespace AMD_DWORD_Viewer
             this.lblTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             this.lblTitle.Text = "Registry Change History";
             
-            // listViewHistory
+
             this.listViewHistory.BackColor = Color.FromArgb(30, 30, 30);
             this.listViewHistory.ForeColor = Color.White;
             this.listViewHistory.FullRowSelect = true;
@@ -72,14 +72,14 @@ namespace AMD_DWORD_Viewer
             this.listViewHistory.BorderStyle = BorderStyle.FixedSingle;
             this.listViewHistory.SelectedIndexChanged += ListView_SelectedIndexChanged;
             
-            // Add columns
+
             this.listViewHistory.Columns.Add("Timestamp", 150);
             this.listViewHistory.Columns.Add("Action", 80);
             this.listViewHistory.Columns.Add("Key Name", 250);
             this.listViewHistory.Columns.Add("Old Value", 150);
             this.listViewHistory.Columns.Add("New Value", 150);
             
-            // btnRevert
+
             this.btnRevert.BackColor = Color.FromArgb(60, 60, 60);
             this.btnRevert.FlatStyle = FlatStyle.Flat;
             this.btnRevert.ForeColor = Color.White;
@@ -89,7 +89,7 @@ namespace AMD_DWORD_Viewer
             this.btnRevert.Enabled = false;
             this.btnRevert.Click += BtnRevert_Click;
             
-            // btnClearHistory
+
             this.btnClearHistory.BackColor = Color.FromArgb(60, 60, 60);
             this.btnClearHistory.FlatStyle = FlatStyle.Flat;
             this.btnClearHistory.ForeColor = Color.White;
@@ -98,7 +98,7 @@ namespace AMD_DWORD_Viewer
             this.btnClearHistory.Text = "Clear History";
             this.btnClearHistory.Click += BtnClearHistory_Click;
             
-            // btnClose
+
             this.btnClose.BackColor = Color.FromArgb(60, 60, 60);
             this.btnClose.FlatStyle = FlatStyle.Flat;
             this.btnClose.ForeColor = Color.White;
@@ -107,7 +107,7 @@ namespace AMD_DWORD_Viewer
             this.btnClose.Text = "Close";
             this.btnClose.DialogResult = DialogResult.OK;
             
-            // Add controls
+
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.listViewHistory);
             this.Controls.Add(this.btnRevert);
@@ -123,7 +123,7 @@ namespace AMD_DWORD_Viewer
         {
             listViewHistory.Items.Clear();
             
-            // Show newest first
+
             foreach (var change in changeHistory.OrderByDescending(c => c.Timestamp))
             {
                 var item = new ListViewItem(new[]
@@ -158,7 +158,7 @@ namespace AMD_DWORD_Viewer
             if (change == null)
                 return;
             
-            // Confirm revert
+
             var message = change.Type switch
             {
                 ChangeType.Add => $"This will DELETE the registry value you added:\n\n{change.KeyName}\nValue: {change.NewValueDisplay}\n\nContinue?",
@@ -175,7 +175,7 @@ namespace AMD_DWORD_Viewer
             
             try
             {
-                // Create a DwordEntry for the change
+
                 var entry = new DwordEntry
                 {
                     KeyName = change.KeyName,
@@ -184,16 +184,16 @@ namespace AMD_DWORD_Viewer
                 
                 bool success = false;
                 
-                // Revert based on change type
+
                 switch (change.Type)
                 {
                     case ChangeType.Add:
-                        // Delete the value that was added
+
                         success = registryWriter.DeleteDwordValue(entry);
                         break;
                     
                     case ChangeType.Delete:
-                        // Re-add the value that was deleted
+
                         if (change.OldValue.HasValue)
                         {
                             success = registryWriter.WriteDwordValue(entry, change.OldValue.Value);
@@ -201,7 +201,7 @@ namespace AMD_DWORD_Viewer
                         break;
                     
                     case ChangeType.Edit:
-                        // Restore the old value
+
                         if (change.OldValue.HasValue)
                         {
                             success = registryWriter.WriteDwordValue(entry, change.OldValue.Value);
@@ -214,13 +214,13 @@ namespace AMD_DWORD_Viewer
                     MessageBox.Show("Change reverted successfully!", "Success", 
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                     
-                    // Remove from history
+
                     changeHistory.Remove(change);
                     
-                    // Reload the list
+
                     LoadHistory();
                     
-                    // Refresh main form
+
                     refreshCallback?.Invoke();
                 }
                 else

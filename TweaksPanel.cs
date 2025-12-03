@@ -32,7 +32,6 @@ namespace AMD_DWORD_Viewer
             this.AutoScroll = true;
             this.Padding = new Padding(10);
 
-            // Title
             lblTitle = new Label
             {
                 Text = "Quick Tweaks",
@@ -72,9 +71,6 @@ namespace AMD_DWORD_Viewer
         }
     }
 
-    /// <summary>
-    /// Represents a single tweak row with apply/revert buttons
-    /// </summary>
     public class TweakRow : Panel
     {
         private Label lblName;
@@ -102,7 +98,6 @@ namespace AMD_DWORD_Viewer
             this.BackColor = Color.FromArgb(30, 30, 30);
             this.Height = 80;
 
-            // Name label
             lblName = new Label
             {
                 Text = tweak.Name,
@@ -115,7 +110,6 @@ namespace AMD_DWORD_Viewer
             };
             this.Controls.Add(lblName);
 
-            // Status label
             lblStatus = new Label
             {
                 Font = new Font("Segoe UI", 8F),
@@ -126,7 +120,6 @@ namespace AMD_DWORD_Viewer
             };
             this.Controls.Add(lblStatus);
 
-            // Apply button
             btnApply = new Button
             {
                 Text = "Apply",
@@ -141,7 +134,6 @@ namespace AMD_DWORD_Viewer
             btnApply.Click += BtnApply_Click;
             this.Controls.Add(btnApply);
 
-            // Revert button
             btnRevert = new Button
             {
                 Text = "Revert",

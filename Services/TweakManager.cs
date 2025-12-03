@@ -8,9 +8,6 @@ using Microsoft.Win32;
 
 namespace AMD_DWORD_Viewer.Services
 {
-    /// <summary>
-    /// Manages tweak application and state persistence
-    /// </summary>
     public class TweakManager
     {
         private readonly RegistryWriter registryWriter;
@@ -23,14 +20,11 @@ namespace AMD_DWORD_Viewer.Services
             registryWriter = writer;
             registryReader = reader;
             stateFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tweaks_state.json");
-            
-            // Get GPU registry path
             gpuRegistryPath = GetGpuRegistryPath();
         }
 
         private string GetGpuRegistryPath()
         {
-            // Find AMD GPU registry key
             try
             {
                 using (var classKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}"))
@@ -66,10 +60,8 @@ namespace AMD_DWORD_Viewer.Services
                 throw new Exception("Could not find AMD GPU registry path");
             }
 
-            // Backup current values
             foreach (var change in tweak.Changes)
             {
-                // Find if this DWORD exists in current entries
                 var existingEntry = allEntries.FirstOrDefault(e => 
                     e.KeyName.Equals(change.KeyName, StringComparison.OrdinalIgnoreCase));
 
@@ -84,7 +76,6 @@ namespace AMD_DWORD_Viewer.Services
                     change.OriginalValue = null;
                 }
 
-                // Apply the change
                 var entry = new DwordEntry
                 {
                     KeyName = change.KeyName,
@@ -115,12 +106,10 @@ namespace AMD_DWORD_Viewer.Services
 
                 if (change.ExistedBefore && change.OriginalValue.HasValue)
                 {
-                    // Restore original value
                     registryWriter.WriteDwordValue(entry, change.OriginalValue.Value);
                 }
                 else if (!change.ExistedBefore)
                 {
-                    // Delete the value since it didn't exist before
                     registryWriter.DeleteDwordValue(entry);
                 }
             }
@@ -133,7 +122,6 @@ namespace AMD_DWORD_Viewer.Services
         {
             try
             {
-                // Load existing state
                 var stateDict = new Dictionary<string, TweakState>();
                 
                 if (File.Exists(stateFilePath))
@@ -143,7 +131,6 @@ namespace AMD_DWORD_Viewer.Services
                         ?? new Dictionary<string, TweakState>();
                 }
 
-                // Update states
                 foreach (var tweak in tweaks)
                 {
                     stateDict[tweak.Name] = new TweakState
@@ -159,7 +146,6 @@ namespace AMD_DWORD_Viewer.Services
                     };
                 }
 
-                // Save
                 var options = new JsonSerializerOptions { WriteIndented = true };
                 var jsonOutput = JsonSerializer.Serialize(stateDict, options);
                 File.WriteAllText(stateFilePath, jsonOutput);
@@ -188,7 +174,6 @@ namespace AMD_DWORD_Viewer.Services
                         {
                             tweak.IsApplied = state.IsApplied;
                             
-                            // Restore change states
                             foreach (var change in tweak.Changes)
                             {
                                 var savedChange = state.Changes.FirstOrDefault(c => c.KeyName == change.KeyName);
@@ -209,7 +194,6 @@ namespace AMD_DWORD_Viewer.Services
         }
     }
 
-    // State persistence classes
     public class TweakState
     {
         public bool IsApplied { get; set; }
