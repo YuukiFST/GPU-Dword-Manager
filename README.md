@@ -15,8 +15,7 @@ A Windows application for viewing and modifying AMD/Nvidia GPU registry DWORDs w
   - **Nvidia Tweaks**: Disable Power Management, Logging, Preemption, HDCP, ECC, Scrubbers + Enable Performance Mode
 - **Automatic Backups**: Original values are backed up before applying tweaks
 - **Smart Revert**: Restore original values or delete DWORDs that didn't exist before
-- **Vendor-Specific UI**: Color scheme changes based on selected GPU (Red for AMD, Green for Nvidia)
-
+  
 ## Screenshots
 
 <img width="403" height="232" alt="image" src="https://github.com/user-attachments/assets/9c43d654-ac8e-4a62-8c6b-625c056c2f45" />
