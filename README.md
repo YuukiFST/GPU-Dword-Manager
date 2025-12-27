@@ -10,9 +10,6 @@ A Windows application for viewing and modifying AMD/Nvidia GPU registry DWORDs w
 - **Advanced Filtering**: Filter by status (Found/Missing/All) and search by name
 - **Edit, Add, Delete**: Modify DWORD values with decimal/hex input support
 - **Change History**: Track all modifications with undo and revert capabilities
-- **Quick Tweaks Panel**: One-click optimization tweaks
-  - **AMD Tweaks**: Disable Gatings, ASPM, Radeon Boost, Logs, Debugs, Traces
-  - **Nvidia Tweaks**: Disable Power Management, Logging, Preemption, HDCP, ECC, Scrubbers + Enable Performance Mode
 - **Automatic Backups**: Original values are backed up before applying tweaks
 - **Smart Revert**: Restore original values or delete DWORDs that didn't exist before
   
