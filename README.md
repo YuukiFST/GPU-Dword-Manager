@@ -15,8 +15,9 @@ A Windows application for viewing and modifying AMD/Nvidia GPU registry DWORDs w
   
 ## Screenshots
 
-<img width="399" height="283" alt="image" src="https://github.com/user-attachments/assets/9b4f2876-616b-4bc3-8ad1-fc42d9a1a602" />
-<img width="399" height="274" alt="image" src="https://github.com/user-attachments/assets/49776948-2624-4b8e-a285-dc78f00800d3" />
+<img width="393" height="273" alt="image" src="https://github.com/user-attachments/assets/a4478b96-99cc-4215-bbc0-3097ecd0c589" />
+<img width="1433" height="746" alt="image" src="https://github.com/user-attachments/assets/d4371c3d-89c8-4fcb-85d0-f6367bbdd7d8" />
+
 
 ## Requirements
 
