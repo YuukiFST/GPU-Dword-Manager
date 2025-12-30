@@ -1,0 +1,126 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GPU_Dword_Manager_Avalonia.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="using:GPU_Dword_Manager_Avalonia.Models"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="720"
+        x:Class="GPU_Dword_Manager_Avalonia.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Title="GPU Dword Manager"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Design.DataContext>
+        
+    </Design.DataContext>
+
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.65" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+
+        <Grid RowDefinitions="Auto,*,Auto" ColumnDefinitions="*,Auto">
+            
+            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="Auto,*,Auto" Margin="10,40,10,10">
+                <StackPanel Orientation="Horizontal" Spacing="10" Grid.Column="0">
+                    <TextBlock Text="Show:" VerticalAlignment="Center"/>
+                    <ComboBox SelectedIndex="{Binding SelectedFilterIndex}" Width="150">
+                        <ComboBoxItem>All DWORDS</ComboBoxItem>
+                        <ComboBoxItem>Present Only</ComboBoxItem>
+                        <ComboBoxItem>Missing Only</ComboBoxItem>
+                    </ComboBox>
+                    
+                    <Button Command="{Binding TogglePathCommand}" Content="{Binding RegistryPathButtonText}"/>
+                </StackPanel>
+
+                <TextBox Grid.Column="1" Margin="20,0" Watermark="Search DWORDS..." Text="{Binding SearchText}"/>
+
+                <StackPanel Orientation="Horizontal" Spacing="10" Grid.Column="2">
+                    <Button Content="Undo Last" Command="{Binding UndoCommand}" IsEnabled="{Binding History.Count}"/>
+                    <Button Content="View History" Command="{Binding ShowHistoryCommand}"/>
+                </StackPanel>
+            </Grid>
+
+            
+            <DataGrid Grid.Row="1" Grid.Column="0" Margin="10" ItemsSource="{Binding FilteredEntries}"
+                      AutoGenerateColumns="False" IsReadOnly="True"
+                      GridLinesVisibility="All" x:Name="DataGrid"
+                      BorderThickness="1" BorderBrush="Gray">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Key Name" Binding="{Binding KeyName}" Width="2*"/>
+                    <DataGridTextColumn Header="Hex Value" Binding="{Binding HexValue}" Width="1*"/>
+                    <DataGridTextColumn Header="Decimal Value" Binding="{Binding DecimalValue}" Width="1*"/>
+                    <DataGridTemplateColumn Header="Status" Width="1*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Status}" VerticalAlignment="Center" Margin="5,0">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush Color="{Binding Exists, Converter={x:Static models:BoolToColorConverter.Instance}}"/>
+                                    </TextBlock.Foreground>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Registry Path" Binding="{Binding RegistryPath}" Width="3*"
+                                        IsVisible="{Binding IsRegistryPathVisible}"/>
+                </DataGrid.Columns>
+                
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Edit Value" Command="{Binding EditCommand}" CommandParameter="{Binding #DataGrid.SelectedItem}"/>
+                        <MenuItem Header="Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding #DataGrid.SelectedItem}"/>
+                        <MenuItem Header="Add Missing Value" Command="{Binding AddCommand}" CommandParameter="{Binding #DataGrid.SelectedItem}"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
+
+            
+            <Border Grid.Row="1" Grid.Column="1" Margin="0,10,10,10" Width="300" 
+                    BorderThickness="1" BorderBrush="Gray" Background="#252525"
+                    IsVisible="{Binding Tweaks.Count, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <Grid RowDefinitions="Auto,*">
+                    <TextBlock Text="Tweaks" FontWeight="Bold" Margin="10"/>
+                    <ScrollViewer Grid.Row="1">
+                        <ItemsControl ItemsSource="{Binding Tweaks}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="5" Padding="5" Background="#303030" CornerRadius="3">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                                <TextBlock Text="{Binding Description}" FontSize="10" Foreground="Gray" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                            <Button Grid.Column="1" Command="{Binding ToggleCommand}" 
+                                                    Content="{Binding ButtonText}" 
+                                                    Margin="5,0,0,0"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            
+            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="*,Auto" Margin="10" Background="#202020">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center"/>
+                    <ProgressBar IsIndeterminate="False" Value="{Binding ProgressValue}" 
+                                 Maximum="100" Width="200" 
+                                 IsVisible="{Binding IsProgressVisible}"/>
+                </StackPanel>
+                <TextBlock Grid.Column="1" Text="made by yuu_0711" Foreground="Gray"/>
+            </Grid>
+        </Grid>
+    </Panel>
+</Window>
+

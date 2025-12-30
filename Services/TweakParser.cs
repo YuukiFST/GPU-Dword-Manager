@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using AMD_DWORD_Viewer.Models;
+using GPU_Dword_Manager_Avalonia.Models;
 
-namespace AMD_DWORD_Viewer.Services
+namespace GPU_Dword_Manager_Avalonia.Services
 {
-    public class TweakParser
+    public class TweakParser : ITweakParser
     {
         private readonly GpuVendor vendor;
 
@@ -61,8 +61,8 @@ namespace AMD_DWORD_Viewer.Services
             tweak.Changes.Add(new TweakChange { KeyName = "DisableAsyncPstates", TargetValue = 1 });
             tweak.Changes.Add(new TweakChange { KeyName = "DisableDynamicPstate", TargetValue = 1 });
             tweak.Changes.Add(new TweakChange { KeyName = "PowerSavingTweaks", TargetValue = 0 });
-            tweak.Changes.Add(new TweakChange { KeyName = "RMPowerFeature", TargetValue = 0 });
-            tweak.Changes.Add(new TweakChange { KeyName = "RMPowerFeature2", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMPowerFeature", TargetValue = 0x55455555 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMPowerFeature2", TargetValue = 0x05555555 });
             tweak.Changes.Add(new TweakChange { KeyName = "EnableMClkSlowdown", TargetValue = 0 });
             tweak.Changes.Add(new TweakChange { KeyName = "RMDidleFeatureGC5", TargetValue = 0 });
 
@@ -99,12 +99,160 @@ namespace AMD_DWORD_Viewer.Services
                 Name = "Enable Performance Mode",
                 Description = "Enables maximum GPU performance settings"
             };
-
             tweak.Changes.Add(new TweakChange { KeyName = "EnablePerformanceMode", TargetValue = 1 });
-            tweak.Changes.Add(new TweakChange { KeyName = "AllowMaxPerf", TargetValue = 1 });
             tweak.Changes.Add(new TweakChange { KeyName = "EnableAggressivePStateBoost", TargetValue = 1 });
             tweak.Changes.Add(new TweakChange { KeyName = "RMDisablePStates", TargetValue = 0 });
             tweak.Changes.Add(new TweakChange { KeyName = "DisableGrAuto", TargetValue = 0 });
+            string graphicsDriversPath = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers";
+            tweak.Changes.Add(new TweakChange { KeyName = "DisableVersionMismatchCheck", TargetValue = 1, RegistryPath = graphicsDriversPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "EnableIgnoreWin32ProcessStatus", TargetValue = 1, RegistryPath = graphicsDriversPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "HwSchMode", TargetValue = 2, RegistryPath = graphicsDriversPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "HwSchTreatExperimentalAsStable", TargetValue = 1, RegistryPath = graphicsDriversPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "TdrDebugMode", TargetValue = 1, RegistryPath = graphicsDriversPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "TdrLevel", TargetValue = 0, RegistryPath = graphicsDriversPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "DisableBadDriverCheckForHwProtection", TargetValue = 1, RegistryPath = graphicsDriversPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "DisableBoostedVSyncVirtualization", TargetValue = 1, RegistryPath = graphicsDriversPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "DisableIndependentVidPnVSync", TargetValue = 1, RegistryPath = graphicsDriversPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "DisableMultiSourceMPOCheck", TargetValue = 1, RegistryPath = graphicsDriversPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "EnableFbrValidation", TargetValue = 0, RegistryPath = graphicsDriversPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "KnownProcessBoostMode", TargetValue = 0, RegistryPath = graphicsDriversPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "DisableOverlays", TargetValue = 1, RegistryPath = graphicsDriversPath });
+            string nvlddmkmPath = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\nvlddmkm";
+            tweak.Changes.Add(new TweakChange { KeyName = "LogWarningEntries", TargetValue = 0, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "LogPagingEntries", TargetValue = 0, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "LogEventEntries", TargetValue = 0, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "LogErrorEntries", TargetValue = 0, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "LogEnableMasks", TargetValue = 0, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "LogDisableMasks", TargetValue = 0, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "PreferSystemMemoryContiguous", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "PrimaryPushBufferSize", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "EnablePerformanceMode", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "DisableBugcheckCallback", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "DisableCudaContextPreemption", TargetValue = 0, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "DisablePreemptionOnS3S4", TargetValue = 0, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "EnableMidGfxPreemptionVGPU", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "EnableMidGfxpSharedBuffer", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "EnableMidGfxPreemption", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "PerfAnalyzeMidBufferPreemption", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "EnableSCGMidBufferPreemption", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "EnableAsyncMidBufferPreemption", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "EnableMidBufferPreemptionForHighTdrTimeout", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "EnableCEPreemption", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "EnableMidBufferPreemption", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "DisablePreemption", TargetValue = 0, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "UvmDisable", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "EnableIommuIsolationOnWDDM216", TargetValue = 0, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "WDDMV2_128K_PTE", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "EnableHDAudioD3Cold", TargetValue = 0, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "WDDMv21Enable64KbSysmemSupport", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "DisableWriteCombining", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "WDDMv21Enable2MPageSupport", TargetValue = 1, RegistryPath = nvlddmkmPath });
+            string nvlddmkmParamsPath = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\nvlddmkm\Parameters";
+            tweak.Changes.Add(new TweakChange { KeyName = "DmaRemappingCompatible", TargetValue = 0, RegistryPath = nvlddmkmParamsPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMAERRForceDisable", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMNoECCFuseCheck", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMDisableRCOnDBE", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RM1441072", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMAERRHandling", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMChkSuppl200405980Driv", TargetValue = 0x13deed31 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmDisableACPI", TargetValue = 0x01FF });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMDisableGpuASPMFlags", TargetValue = 3 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMPowerFeature", TargetValue = 0x54455555 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMPowerFeature2", TargetValue = 0x05555555 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMFspg", TargetValue = 0x0000000F });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMBlcg", TargetValue = 0x11111111 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMElcg", TargetValue = 0x55555555 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmElpg", TargetValue = 0x00000FFF });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMSlcg", TargetValue = 0x0003ffff });
+            tweak.Changes.Add(new TweakChange { KeyName = "DisableDynamicPstate", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMOPSB", TargetValue = 0x00002AA2 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMLpwrArch", TargetValue = 0x00055555 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMGCOffFeature", TargetValue = 2 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmClkPowerOffDramPllWhenUnused", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMDisableOptimalPowerForPadlinkPll", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMPcieLtrOverride", TargetValue = 2 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmPgCtrlParameters", TargetValue = 0x55555155 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmPgCtrlGrParameters", TargetValue = 0x55555555 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmLpwrCtrlGrRgParameters", TargetValue = 0x05555555 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmPgCtrlDiParameters", TargetValue = 0x00000015 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMDidleFeatureGC5", TargetValue = 0x2AAAAAA });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMGC6Parameters", TargetValue = 0x00000055 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMBandwidthFeature2", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmMIONoPowerOff", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMClkSlowDown", TargetValue = 0x05400000 });
+            tweak.Changes.Add(new TweakChange { KeyName = "EnablePerformanceMode", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMLpwrEiClient", TargetValue = 5 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmLpwrGrPgSwFilterFunction", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmLpwrCtrlMsLtcParameters", TargetValue = 5 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmLpwrCtrlMsDifrCgParameters", TargetValue = 0x00000555 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RM2779240", TargetValue = 5 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmLpwrCtrlMsDifrSwAsrParameters", TargetValue = 0x00001555 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmOverrideIdleSlowdownSettings", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmPerfRatedTdpLimit", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmPmgrPwrPolicyOverride", TargetValue = 0x0000000F });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMGC6Feature", TargetValue = 0x002AAAAA });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmPerfCfOverride", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "GrCtxSwMode", TargetValue = 2 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmRcWatchdog", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "ThermalPolicySW1", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "GlitchFreeMClk", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMEnablePowerSupplyCapacity", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMPowerSupplyCapacity", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMSkipACPIBattCap", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMDiWakeupTimer", TargetValue = 2 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMD3Feature", TargetValue = 2 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmDisableRegistryCaching", TargetValue = 0x0000000F });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMHdcpKeyglobZero", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMDisableEDC", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmGpsPowerSteeringEnable", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmGpsPsEnablePerCpuCoreDpc", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmHulkDisableFeatures", TargetValue = 7 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMCtxswLog", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmThermPolicySwSlowdownOverride", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmThermPolicyOverride", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmPerfCfPolicyOverrides", TargetValue = 3 });
+            tweak.Changes.Add(new TweakChange { KeyName = "MaxPerfWithPerfMon", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMAsrWakeup", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmEnableHda", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmFbsrPagedDMA", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMSupportUserdMapDma", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RM572548", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmDwbMscg", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmValidateClientData", TargetValue = 0x000000AA });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmIgnoreHulkErrors", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmForceDisableIomapWC", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmClkControllersOverride", TargetValue = 3 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMI2cSpeed", TargetValue = 0x00000400 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RM2644249", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmWar1760398", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmCeElcgWar1895530", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMBug2519005War", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmDisableInforomNvlink", TargetValue = 3 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMDisableIntrIllegalCompstatAccess", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmSec2EnableApm", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMCBAllocVPR", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmGpsACPIType", TargetValue = 0 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmDisableFanDiag", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RmGpsPreferIntrinsicFuncs", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMNoECCFBScrub", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMDisableScrubOnFree", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMDisableAsyncMemScrub", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMDisableFastScrubber", TargetValue = 1 });
+            tweak.Changes.Add(new TweakChange { KeyName = "RMUcodeEncryption", TargetValue = 0x00015555 });
+            string schedulerPath = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Scheduler";
+            tweak.Changes.Add(new TweakChange { KeyName = "AdjustWorkerThreadPriority", TargetValue = 0, RegistryPath = schedulerPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "AudioDgAutoBoostPriority", TargetValue = 0, RegistryPath = schedulerPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "AutoSyncToCPUPriority", TargetValue = 0, RegistryPath = schedulerPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "DebugLargeSmoothenedDuration", TargetValue = 0, RegistryPath = schedulerPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "ForegroundPriorityBoost", TargetValue = 0, RegistryPath = schedulerPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "FrameServerAutoBoostPriority", TargetValue = 0, RegistryPath = schedulerPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "QueuedPresentLimit", TargetValue = 1, RegistryPath = schedulerPath });
+            tweak.Changes.Add(new TweakChange { KeyName = "EnablePreemption", TargetValue = 1, RegistryPath = schedulerPath });
+            tweak.Changes.Add(new TweakChange 
+            { 
+                ActionType = TweakActionType.Command,
+                FilePath = "Configure Nvidia.bat"
+            });
 
             return tweak;
         }
@@ -428,3 +576,4 @@ namespace AMD_DWORD_Viewer.Services
         }
     }
 }
+

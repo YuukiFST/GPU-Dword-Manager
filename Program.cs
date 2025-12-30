@@ -1,35 +1,29 @@
+using Avalonia;
 using System;
-using System.Windows.Forms;
 
-namespace AMD_DWORD_Viewer
+namespace GPU_Dword_Manager_Avalonia;
+
+class Program
 {
-    internal static class Program
-    {
-        [STAThread]
-        static void Main()
-        {
-            try
-            {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
 
-                using (var selectionForm = new VendorSelectionForm())
-                {
-                    if (selectionForm.ShowDialog() == DialogResult.OK)
-                    {
-                        Application.Run(new MainForm(selectionForm.SelectedVendor));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    $"Fatal error starting application:\n\n{ex.Message}\n\nStack Trace:\n{ex.StackTrace}",
-                    "Fatal Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-            }
+    [STAThread]
+    public static void Main(string[] args)
+    {
+        try
+        {
+            BuildAvaloniaApp()
+                .StartWithClassicDesktopLifetime(args);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
         }
     }
+
+    public static AppBuilder BuildAvaloniaApp()
+        => AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .WithInterFont()
+            .LogToTrace();
 }
+

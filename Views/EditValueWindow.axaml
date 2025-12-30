@@ -1,0 +1,31 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:GPU_Dword_Manager_Avalonia.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="200"
+        Width="400" Height="200"
+        x:Class="GPU_Dword_Manager_Avalonia.Views.EditValueWindow"
+        Title="{Binding Title}"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        x:DataType="vm:EditValueViewModel"
+        SystemDecorations="Full">
+
+    <Design.DataContext>
+        <vm:EditValueViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="20">
+        <TextBlock Grid.Row="0" Text="{Binding KeyName}" FontWeight="Bold" Margin="0,0,0,20"/>
+        
+        <TextBlock Grid.Row="1" Text="Value (Decimal):" Margin="0,0,0,5"/>
+        <NumericUpDown Grid.Row="2" Value="{Binding Value}" Minimum="0" Maximum="4294967295" FormatString="0"/>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,20,0,0">
+            <Button Command="{Binding SaveCommand}" Content="Save" IsDefault="True"/>
+            <Button Command="{Binding CancelCommand}" Content="Cancel" IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>
+

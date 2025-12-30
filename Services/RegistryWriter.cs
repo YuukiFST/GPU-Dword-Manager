@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Win32;
 
-namespace AMD_DWORD_Viewer.Services
+namespace GPU_Dword_Manager_Avalonia.Services
 {
     public class RegistryWriter
     {
@@ -102,3 +102,4 @@ namespace AMD_DWORD_Viewer.Services
         }
     }
 }
+

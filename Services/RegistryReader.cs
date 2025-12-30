@@ -1,13 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AMD_DWORD_Viewer.Models;
+using GPU_Dword_Manager_Avalonia.Models;
 using Microsoft.Win32;
 
-namespace AMD_DWORD_Viewer.Services
+namespace GPU_Dword_Manager_Avalonia.Services
 {
     public class RegistryReader
     {
+        public object? ReadDwordValue(DwordEntry entry)
+        {
+            ReadRegistryValue(entry);
+            return entry.Value;
+        }
+
         public void ReadRegistryValues(List<DwordEntry> entries)
         {
             foreach (var entry in entries)
@@ -111,3 +117,4 @@ namespace AMD_DWORD_Viewer.Services
         }
     }
 }
+

@@ -1,4 +1,4 @@
-namespace AMD_DWORD_Viewer.Models
+namespace GPU_Dword_Manager_Avalonia.Models
 {
     public class DwordEntry
     {
@@ -58,3 +58,4 @@ namespace AMD_DWORD_Viewer.Models
         public string OriginalLine { get; set; } = string.Empty;
     }
 }
+

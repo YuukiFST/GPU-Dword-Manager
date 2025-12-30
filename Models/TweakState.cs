@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace AMD_DWORD_Viewer.Models
+namespace GPU_Dword_Manager_Avalonia.Models
 {
     public class TweakState
     {
@@ -14,5 +14,9 @@ namespace AMD_DWORD_Viewer.Models
         public uint TargetValue { get; set; }
         public uint? OriginalValue { get; set; }
         public bool ExistedBefore { get; set; }
+        public int ActionType { get; set; }
+        public string FilePath { get; set; } = string.Empty;
+        public string? RegistryPath { get; set; }
     }
 }
+

@@ -3,26 +3,32 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using AMD_DWORD_Viewer.Models;
+using GPU_Dword_Manager_Avalonia.Models;
+using GPU_Dword_Manager_Avalonia.Services.Strategies;
 using Microsoft.Win32;
 
-namespace AMD_DWORD_Viewer.Services
+namespace GPU_Dword_Manager_Avalonia.Services
 {
-    public class TweakManager
+    public class TweakManager : ITweakService
     {
-        private readonly RegistryWriter registryWriter;
-        private readonly RegistryReader registryReader;
-        private readonly string stateFilePath;
-        private readonly GpuVendor vendor;
-        private string gpuRegistryPath = string.Empty;
+        private readonly IRegistryService _registryService;
+        private readonly IEnumerable<ITweakActionHandler> _actionHandlers;
+        private readonly string _stateFilePath;
+        private readonly GpuVendor _vendor;
+        private string _gpuRegistryPath = string.Empty;
 
-        public TweakManager(RegistryWriter writer, RegistryReader reader, GpuVendor selectedVendor = GpuVendor.AMD)
+        public TweakManager(IRegistryService registryService, IEnumerable<ITweakActionHandler> actionHandlers, GpuVendor selectedVendor = GpuVendor.AMD)
         {
-            registryWriter = writer;
-            registryReader = reader;
-            vendor = selectedVendor;
-            stateFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tweaks_state.json");
-            gpuRegistryPath = GetGpuRegistryPath();
+            _registryService = registryService;
+            _actionHandlers = actionHandlers;
+            _vendor = selectedVendor;
+            
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var appFolder = Path.Combine(appData, "GPU_Dword_Manager_Avalonia");
+            if (!Directory.Exists(appFolder)) Directory.CreateDirectory(appFolder);
+            
+            _stateFilePath = Path.Combine(appFolder, "tweaks_state.json");
+            _gpuRegistryPath = GetGpuRegistryPath();
         }
 
         private string GetGpuRegistryPath()
@@ -42,7 +48,7 @@ namespace AMD_DWORD_Viewer.Services
                                     var desc = subKey.GetValue("DriverDesc") as string;
                                     if (desc != null)
                                     {
-                                        bool isMatch = vendor == GpuVendor.Nvidia
+                                        bool isMatch = _vendor == GpuVendor.Nvidia
                                             ? (desc.Contains("NVIDIA", StringComparison.OrdinalIgnoreCase) || desc.Contains("GeForce", StringComparison.OrdinalIgnoreCase))
                                             : desc.Contains("Radeon", StringComparison.OrdinalIgnoreCase);
                                         
@@ -67,47 +73,15 @@ namespace AMD_DWORD_Viewer.Services
 
         public void ApplyTweak(TweakDefinition tweak, List<DwordEntry> allEntries)
         {
-            if (string.IsNullOrEmpty(gpuRegistryPath))
+            if (string.IsNullOrEmpty(_gpuRegistryPath))
             {
-                throw new Exception($"Could not find {vendor} GPU registry path");
+                throw new Exception($"Could not find {_vendor} GPU registry path");
             }
 
             foreach (var change in tweak.Changes)
             {
-                var existingEntry = allEntries.FirstOrDefault(e => 
-                    e.KeyName.Equals(change.KeyName, StringComparison.OrdinalIgnoreCase));
-
-                if (existingEntry != null && existingEntry.Exists)
-                {
-                    change.ExistedBefore = true;
-                    try
-                    {
-                        change.OriginalValue = existingEntry.Value != null ? Convert.ToUInt32(existingEntry.Value) : 0;
-                    }
-                    catch (FormatException)
-                    {
-                        change.ExistedBefore = false;
-                        change.OriginalValue = null;
-                    }
-                    catch (InvalidCastException)
-                    {
-                        change.ExistedBefore = false;
-                        change.OriginalValue = null;
-                    }
-                }
-                else
-                {
-                    change.ExistedBefore = false;
-                    change.OriginalValue = null;
-                }
-
-                var entry = new DwordEntry
-                {
-                    KeyName = change.KeyName,
-                    RegistryPath = gpuRegistryPath
-                };
-
-                registryWriter.WriteDwordValue(entry, change.TargetValue);
+                var handler = _actionHandlers.FirstOrDefault(h => h.CanHandle(change.ActionType));
+                handler?.Apply(change, allEntries, _gpuRegistryPath, _registryService);
             }
 
             tweak.IsApplied = true;
@@ -116,27 +90,15 @@ namespace AMD_DWORD_Viewer.Services
 
         public void RevertTweak(TweakDefinition tweak)
         {
-            if (string.IsNullOrEmpty(gpuRegistryPath))
+            if (string.IsNullOrEmpty(_gpuRegistryPath))
             {
-                throw new Exception($"Could not find {vendor} GPU registry path");
+                throw new Exception($"Could not find {_vendor} GPU registry path");
             }
 
             foreach (var change in tweak.Changes)
             {
-                var entry = new DwordEntry
-                {
-                    KeyName = change.KeyName,
-                    RegistryPath = gpuRegistryPath
-                };
-
-                if (change.ExistedBefore && change.OriginalValue.HasValue)
-                {
-                    registryWriter.WriteDwordValue(entry, change.OriginalValue.Value);
-                }
-                else if (!change.ExistedBefore)
-                {
-                    registryWriter.DeleteDwordValue(entry);
-                }
+                var handler = _actionHandlers.FirstOrDefault(h => h.CanHandle(change.ActionType));
+                handler?.Revert(change, _gpuRegistryPath, _registryService);
             }
 
             tweak.IsApplied = false;
@@ -149,9 +111,9 @@ namespace AMD_DWORD_Viewer.Services
             {
                 var stateDict = new Dictionary<string, TweakState>();
                 
-                if (File.Exists(stateFilePath))
+                if (File.Exists(_stateFilePath))
                 {
-                    var json = File.ReadAllText(stateFilePath);
+                    var json = File.ReadAllText(_stateFilePath);
                     stateDict = JsonSerializer.Deserialize<Dictionary<string, TweakState>>(json) 
                         ?? new Dictionary<string, TweakState>();
                 }
@@ -166,14 +128,17 @@ namespace AMD_DWORD_Viewer.Services
                             KeyName = c.KeyName,
                             TargetValue = c.TargetValue,
                             OriginalValue = c.OriginalValue,
-                            ExistedBefore = c.ExistedBefore
+                            ExistedBefore = c.ExistedBefore,
+                            ActionType = (int)c.ActionType,
+                            FilePath = c.FilePath,
+                            RegistryPath = c.RegistryPath
                         }).ToList()
                     };
                 }
 
                 var options = new JsonSerializerOptions { WriteIndented = true };
                 var jsonOutput = JsonSerializer.Serialize(stateDict, options);
-                File.WriteAllText(stateFilePath, jsonOutput);
+                File.WriteAllText(_stateFilePath, jsonOutput);
             }
             catch (Exception ex)
             {
@@ -185,10 +150,10 @@ namespace AMD_DWORD_Viewer.Services
         {
             try
             {
-                if (!File.Exists(stateFilePath))
+                if (!File.Exists(_stateFilePath))
                     return;
 
-                var json = File.ReadAllText(stateFilePath);
+                var json = File.ReadAllText(_stateFilePath);
                 var stateDict = JsonSerializer.Deserialize<Dictionary<string, TweakState>>(json);
 
                 if (stateDict != null)
@@ -206,6 +171,9 @@ namespace AMD_DWORD_Viewer.Services
                                 {
                                     change.OriginalValue = savedChange.OriginalValue;
                                     change.ExistedBefore = savedChange.ExistedBefore;
+                                    change.ActionType = (TweakActionType)savedChange.ActionType;
+                                    change.FilePath = savedChange.FilePath;
+                                    change.RegistryPath = savedChange.RegistryPath;
                                 }
                             }
                         }
@@ -219,4 +187,5 @@ namespace AMD_DWORD_Viewer.Services
         }
     }
 }
+
 

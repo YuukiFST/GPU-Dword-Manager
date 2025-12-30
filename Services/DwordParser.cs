@@ -2,11 +2,11 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
-using AMD_DWORD_Viewer.Models;
+using GPU_Dword_Manager_Avalonia.Models;
 
-namespace AMD_DWORD_Viewer.Services
+namespace GPU_Dword_Manager_Avalonia.Services
 {
-    public class DwordParser
+    public class DwordParser : IDwordParser
     {
         private readonly GpuVendor vendor;
 
@@ -18,27 +18,26 @@ namespace AMD_DWORD_Viewer.Services
         public List<DwordEntry> ParseFile()
         {
             var entries = new List<DwordEntry>();
-
-            var assembly = Assembly.GetExecutingAssembly();
+            var assembly = typeof(DwordParser).Assembly;
             
             List<string> resourceNames = new List<string>();
             if (vendor == GpuVendor.AMD)
             {
-                resourceNames.Add("AMD_DWORD_Viewer.AMD_EXPORT.txt");
+                resourceNames.Add("GPU_Dword_Manager_Avalonia.AMD_EXPORT.txt");
             }
             else
             {
-                resourceNames.Add("AMD_DWORD_Viewer.NVIDIA_0000.txt");
-                resourceNames.Add("AMD_DWORD_Viewer.NVIDIA_NVLDDMKM.txt");
+                resourceNames.Add("GPU_Dword_Manager_Avalonia.Nvidia.0000 NVIDIA.txt");
+                resourceNames.Add("GPU_Dword_Manager_Avalonia.Nvidia.NVLDDMKM.txt");
             }
 
             foreach (var resourceName in resourceNames)
             {
-                using (Stream? stream = assembly.GetManifestResourceStream(resourceName))
+                using (var stream = assembly.GetManifestResourceStream(resourceName))
                 {
                     if (stream == null)
                     {
-                        throw new FileNotFoundException($"Embedded resource '{resourceName}' not found.");
+                        throw new Exception($"Resource not found: {resourceName}");
                     }
 
                     using (StreamReader reader = new StreamReader(stream))
@@ -97,3 +96,4 @@ namespace AMD_DWORD_Viewer.Services
         }
     }
 }
+

@@ -1,0 +1,47 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:GPU_Dword_Manager_Avalonia.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="250"
+        Width="400" Height="250"
+        x:Class="GPU_Dword_Manager_Avalonia.Views.VendorSelectionWindow"
+        Title="Select GPU Vendor"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False"
+        x:DataType="vm:VendorSelectionViewModel"
+        SystemDecorations="Full">
+
+    <Design.DataContext>
+        <vm:VendorSelectionViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="*,Auto,*" Margin="20">
+        <TextBlock Grid.Row="0" Text="Select your GPU Vendor" 
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   FontSize="20" FontWeight="Bold"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
+            <Button Command="{Binding SelectAmdCommand}" 
+                    Width="120" Height="50"
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                    Background="#DC0000" Foreground="White"
+                    FontSize="16" FontWeight="SemiBold">
+                AMD
+            </Button>
+
+            <Button Command="{Binding SelectNvidiaCommand}" 
+                    Width="120" Height="50"
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                    Background="#76B900" Foreground="White"
+                    FontSize="16" FontWeight="SemiBold">
+                Nvidia
+            </Button>
+        </StackPanel>
+        
+        <TextBlock Grid.Row="2" Text="GPU Dword Manager" 
+                   HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                   Foreground="Gray" FontSize="12"/>
+    </Grid>
+</Window>
+

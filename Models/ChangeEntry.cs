@@ -1,6 +1,6 @@
 using System;
 
-namespace AMD_DWORD_Viewer.Models
+namespace GPU_Dword_Manager_Avalonia.Models
 {
     public enum ChangeType
     {
@@ -58,3 +58,4 @@ namespace AMD_DWORD_Viewer.Models
         }
     }
 }
+
