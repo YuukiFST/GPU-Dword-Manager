@@ -2,6 +2,8 @@
 
 A Windows application for viewing and modifying AMD/Nvidia GPU registry DWORDs with built-in optimization tweaks.
 
+OBS: The DWORD's list are NOT of your actual GPU Driver. Isn't a real time monitor tool.
+
 ## Features
 
 - **Dual GPU Support**: Works with both AMD Radeon and Nvidia GeForce GPUs
