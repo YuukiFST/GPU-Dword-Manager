@@ -2,18 +2,16 @@
 
 > [!CAUTION]
 > ## ⚠️ THIS PROJECT IS ARCHIVED — NO LONGER MAINTAINED ⚠️
-> 
-> **This project is no longer being updated and there are no plans to update it in the foreseeable future.**
 >
-> ---
+> **This project is no longer being updated and I have no plans to update it in the foreseeable future.**
 >
 > ### 🔴 FOR ADVANCED USERS ONLY — READ BEFORE USING
 >
 > **This tool should only be used by people who know exactly what they are doing.**
 >
-> The repository was kept private for a period of time because the program contains **NVIDIA-specific registry tweaks that were created purely for testing purposes** — they are **NOT optimizations** and **WILL negatively impact NVIDIA GPU performance**. The author does not use an NVIDIA GPU and these settings were never validated for real-world use.
+> I kept this repository private for a period of time because some tweaks in the **Quick Tweaks section for NVIDIA** were created purely for my own testing purposes and **can negatively impact NVIDIA GPU performance**. I do not own or use an NVIDIA GPU, so those settings were never validated for real-world use. Apply them with caution.
 >
-> **If you have an NVIDIA GPU, applying those tweaks without understanding what they do can harm your system's GPU performance.**
+> Similarly, disabling **Logs, Debugs and Traces for AMD GPUs can also be harmful to performance** for users with an AMD GPU from the **5000 series or above**.
 >
 > You have been warned. Proceed at your own risk.
 
@@ -35,7 +33,7 @@ A Windows application for viewing and modifying AMD/Nvidia GPU registry DWORDs w
 
 ## Screenshots
 <img width="393" height="273" alt="image" src="https://github.com/user-attachments/assets/a4478b96-99cc-4215-bbc0-3097ecd0c589" />
-<img width="1433" height="746" alt="image" src="https://github.com/user-attachments/assets/d4371c3d-89c8-4fcb-85d0-f6367bbdd7d8" />
+<img width="1433" height="746" alt="image" src="https://github.com/user-attachments/assets/d4371c3d-89c8-4ficb-85d0-f6367bbdd7d8" />
 
 ## Requirements
 - Windows 10/11
