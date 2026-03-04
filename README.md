@@ -1,11 +1,29 @@
 # GPU Dword Manager
 
+> [!CAUTION]
+> ## ⚠️ THIS PROJECT IS ARCHIVED — NO LONGER MAINTAINED ⚠️
+> 
+> **This project is no longer being updated and there are no plans to update it in the foreseeable future.**
+>
+> ---
+>
+> ### 🔴 FOR ADVANCED USERS ONLY — READ BEFORE USING
+>
+> **This tool should only be used by people who know exactly what they are doing.**
+>
+> The repository was kept private for a period of time because the program contains **NVIDIA-specific registry tweaks that were created purely for testing purposes** — they are **NOT optimizations** and **WILL negatively impact NVIDIA GPU performance**. The author does not use an NVIDIA GPU and these settings were never validated for real-world use.
+>
+> **If you have an NVIDIA GPU, applying those tweaks without understanding what they do can harm your system's GPU performance.**
+>
+> You have been warned. Proceed at your own risk.
+
+---
+
 A Windows application for viewing and modifying AMD/Nvidia GPU registry DWORDs with built-in optimization tweaks.
 
-OBS: The DWORD's list are NOT of your actual GPU Driver. Isn't a real time monitor tool.
+> **Note:** The DWORD list does NOT reflect your actual GPU Driver. This is not a real-time monitor tool.
 
 ## Features
-
 - **Dual GPU Support**: Works with both AMD Radeon and Nvidia GeForce GPUs
 - **DWORD Registry Viewer**: Browse and search through GPU registry entries
 - **Live Registry Reading**: Real-time querying of Windows Registry values
@@ -14,14 +32,11 @@ OBS: The DWORD's list are NOT of your actual GPU Driver. Isn't a real time monit
 - **Change History**: Track all modifications with undo and revert capabilities
 - **Automatic Backups**: Original values are backed up before applying tweaks
 - **Smart Revert**: Restore original values or delete DWORDs that didn't exist before
-  
-## Screenshots
 
+## Screenshots
 <img width="393" height="273" alt="image" src="https://github.com/user-attachments/assets/a4478b96-99cc-4215-bbc0-3097ecd0c589" />
 <img width="1433" height="746" alt="image" src="https://github.com/user-attachments/assets/d4371c3d-89c8-4fcb-85d0-f6367bbdd7d8" />
 
-
 ## Requirements
-
 - Windows 10/11
 - Administrator privileges (for registry modifications)
