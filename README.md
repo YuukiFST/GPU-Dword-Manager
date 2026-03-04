@@ -11,7 +11,7 @@
 >
 > I kept this repository private for a period of time because some tweaks in the **Quick Tweaks section for NVIDIA** were created purely for my own testing purposes and **can negatively impact NVIDIA GPU performance**. I do not own or use an NVIDIA GPU, so those settings were never validated for real-world use. Apply them with caution.
 >
-> Similarly, disabling **Logs, Debugs and Traces for AMD GPUs can also be harmful to performance** for users with an AMD GPU from the **5000 series or above**.
+> Similarly, disabling **Logs, Debugs and Traces for AMD GPUs can also be harmful to performance** for users with an AMD GPU from the **6000 series or above**.
 >
 > You have been warned. Proceed at your own risk.
 
