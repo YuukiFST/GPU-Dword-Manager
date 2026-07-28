@@ -1,4 +1,4 @@
-# GPU Dword Manager
+# OUTDATED/BROKEN GPU Dword Manager
 
 > [!CAUTION]
 > ## ⚠️ THIS PROJECT IS ARCHIVED — NO LONGER MAINTAINED ⚠️
